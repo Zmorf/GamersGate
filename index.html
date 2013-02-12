@@ -1,0 +1,110 @@
+
+
+<html>
+	<head>
+		<title>Gamers Gate</title>
+		
+    <style>
+      #canvas {
+        border: 1px solid #9C9898;
+      }
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+	
+	<script type="text/javascript">
+	
+	
+		
+		function Computer(x, y)
+		{
+			this.X = x;
+			this.Y = y;
+			
+			this.id = id_counter;
+			id_counter = id_counter + 1;
+			
+		}
+	
+		function draw_computer(context, x, y)
+		{
+			context.beginPath();
+			context.rect(x, y, 50, 50);
+			context.fillStyle = 'yellow';
+			context.fill();
+			context.strokeStyle = 'black';
+			context.stroke();
+			
+			var com = new Computer(x, y);
+			computers[id_counter-1] = com;
+			
+		}
+	
+		function rec_draw_computer(context, start_x, start_y, size, amount_of_computers)
+		{
+			
+			for(var i = 0; i <  amount_of_computers; i++)
+			{
+				draw_computer(context, start_x + (size*i), start_y);
+			}
+		}
+		
+		function mouse_handler(e)
+		{
+			alert("Cursor at X:" + cursorX + " Y:" + cursorY);
+			for(var i = 0; i < computers.length; i++)
+			{
+				var com = computers[i];
+				if((com.X < cursorX) && ((com.X+50) > cursorX) && (com.Y < cursorY) && ((com.Y+50) > cursorY))
+				{
+					//alert("Clicked computer " + com.id + " @ X:" + com.X + " Y:" + com.Y);
+				}
+				//document.getElementById('data').innerHTML = document.getElementById('data').innerHTML + "<br/>" + "Com at X:" + com.X + " Y:" + com.Y;
+			}
+		}
+	
+	</script>
+	</head>
+
+<body>
+
+	<canvas width="800px" height="500px" id="canvas"></canvas>
+	
+	
+	
+	<div id="data"> </div>
+	
+	<script type="text/javascript">
+		var id_counter = 0;
+		var cursorX;
+		var cursorY;
+		var computers = new Array();
+		
+		
+		var canvas = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+		
+		rec_draw_computer(context, 80, 150, 50, 10);
+		rec_draw_computer(context, 80, 200, 50, 10);
+		
+		
+		
+		if(document.layers)
+		{
+			document.captureEvents(Event.MOUSEDOWN);
+		}
+		document.onmousedown = mouse_handler;
+		
+		document.onmousemove = function(e) 
+		{
+			cursorX = e.pageX;
+			cursorY = e.pageY;
+		}
+		
+		document.getElementById('data').innerHTML = computers.length + "   " + computers[1].X;
+	</script>
+
+</body>
+</html>
