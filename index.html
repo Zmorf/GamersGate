@@ -25,7 +25,7 @@
 	
 	.overlayimg
 	{
-		background-color: #000000;
+		background-color: #FFFFFF;
 		position: absolute;
 		z-index: 11;
 		/*left: 50px;
@@ -56,6 +56,11 @@
 				form_div.style.top = screen.height/2 - 275;
 				form_div.style.left = screen.width/2 - 175;
 				has_layout = true;
+				
+				//create layout
+				var header = document.createElement("h2");
+				header.innerHTML = "Header";
+				form_div.appendChild(header);
 			}
 		}
 		
