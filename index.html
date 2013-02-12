@@ -5,18 +5,65 @@
 		<title>Gamers Gate</title>
 		
     <style>
-      #canvas {
-        border: 1px solid #9C9898;
-      }
-      body {
-        margin: 0px;
-        padding: 0px;
-      }
+    #canvas {
+		border: 1px solid #9C9898;
+    }
+    body {
+		margin: 0px;
+		padding: 0px;
+    }
+	  
+	.overlay
+	{
+		background-color: #000;
+		opacity: .7;
+		filter: alpha(opacity=70);
+		position: absolute; top: 0; left: 0;
+		width: 100%; height: 100%;
+		z-index: 10;
+	}
+	
+	.overlayimg
+	{
+		background-color: #000000;
+		position: absolute;
+		z-index: 11;
+		/*left: 50px;
+		top: 50px;*/
+		height: 350px;
+		width: 350px;
+	}
+
+	  
     </style>
 	
 	<script type="text/javascript">
 	
-	
+		function expandPhoto() {
+			if(!has_layout)
+			{
+				var overlay = document.createElement("div");
+				overlay.setAttribute("id","overlay");
+				overlay.setAttribute("class", "overlay");
+				overlay.onclick = restore;
+				document.body.appendChild(overlay);
+			
+			
+				var form_div = document.createElement("div");
+				form_div.setAttribute("id", "overlayimg");
+				form_div.setAttribute("class", "overlayimg");
+				document.body.appendChild(form_div);
+				form_div.style.top = screen.height/2 - 275;
+				form_div.style.left = screen.width/2 - 175;
+				has_layout = true;
+			}
+		}
+		
+		function restore() {
+			document.body.removeChild(document.getElementById("overlay"));
+			document.body.removeChild(document.getElementById("overlayimg"));
+			has_layout = false;
+		}
 		
 		function Computer(x, y)
 		{
@@ -53,15 +100,21 @@
 		
 		function mouse_handler(e)
 		{
-			alert("Cursor at X:" + cursorX + " Y:" + cursorY);
-			for(var i = 0; i < computers.length; i++)
+			e = e || window.event;
+			var button = e.which || e.button;
+			if(button == 1)
 			{
-				var com = computers[i];
-				if((com.X < cursorX) && ((com.X+50) > cursorX) && (com.Y < cursorY) && ((com.Y+50) > cursorY))
+				//alert("Cursor at X:" + cursorX + " Y:" + cursorY);
+				for(var i = 0; i < computers.length; i++)
 				{
-					//alert("Clicked computer " + com.id + " @ X:" + com.X + " Y:" + com.Y);
+					var com = computers[i];
+					if((com.X < cursorX) && ((com.X+50) > cursorX) && (com.Y < cursorY) && ((com.Y+50) > cursorY))
+					{
+						//alert("Clicked computer " + com.id + " @ X:" + com.X + " Y:" + com.Y);
+						expandPhoto();
+					}
+					//document.getElementById('data').innerHTML = document.getElementById('data').innerHTML + "<br/>" + "Com at X:" + com.X + " Y:" + com.Y;
 				}
-				//document.getElementById('data').innerHTML = document.getElementById('data').innerHTML + "<br/>" + "Com at X:" + com.X + " Y:" + com.Y;
 			}
 		}
 	
@@ -81,7 +134,7 @@
 		var cursorX;
 		var cursorY;
 		var computers = new Array();
-		
+		var has_layout = false;
 		
 		var canvas = document.getElementById('canvas');
 		var context = canvas.getContext('2d');
@@ -103,7 +156,7 @@
 			cursorY = e.pageY;
 		}
 		
-		document.getElementById('data').innerHTML = computers.length + "   " + computers[1].X;
+		//document.getElementById('data').innerHTML = computers.length + "   " + computers[1].X;
 	</script>
 
 </body>
