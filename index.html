@@ -107,6 +107,8 @@
 		{
 			e = e || window.event;
 			var button = e.which || e.button;
+			cursorX = e.pageX;
+			cursorY = e.pageY;
 			if(button == 1)
 			{
 				//alert("Cursor at X:" + cursorX + " Y:" + cursorY);
@@ -155,11 +157,11 @@
 		}
 		document.onmousedown = mouse_handler;
 		
-		document.onmousemove = function(e) 
+		/*document.onmousemove = function(e) 
 		{
 			cursorX = e.pageX;
 			cursorY = e.pageY;
-		}
+		}*/
 		
 		//document.getElementById('data').innerHTML = computers.length + "   " + computers[1].X;
 	</script>
