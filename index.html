@@ -34,11 +34,37 @@
 		width: 350px;
 	}
 
+	.header
+	{
+		text-align: center;
+	}
 	  
     </style>
 	
 	<script type="text/javascript">
 	
+		
+		function loadXMLDoc()
+		{
+			var xmlhttp;
+			if (window.XMLHttpRequest)
+			{// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+			}
+			else
+			{// code for IE6, IE5
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.onreadystatechange=function()
+				{
+					if (xmlhttp.readyState==4 && xmlhttp.status==200)
+					{
+						document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+					}
+				}
+			xmlhttp.open("GET","ajax_info.txt",true);
+			xmlhttp.send();
+		}
 		function expandPhoto() {
 			if(!has_layout)
 			{
@@ -52,7 +78,6 @@
 				var form_div = document.createElement("div");
 				form_div.setAttribute("id", "overlayimg");
 				form_div.setAttribute("class", "overlayimg");
-				document.body.appendChild(form_div);
 				form_div.style.top = screen.height/2 - 275;
 				form_div.style.left = screen.width/2 - 175;
 				has_layout = true;
@@ -60,8 +85,79 @@
 				//create layout
 				var header = document.createElement("h2");
 				header.innerHTML = "Header";
+				header.setAttribyte("class", "header");
 				form_div.appendChild(header);
+				
+				
+				document.body.appendChild(form_div);
 			}
+		}
+		
+		function show_login_window()
+		{
+			if(!has_layout)
+			{
+				var overlay = document.createElement("div");
+				overlay.setAttribute("id","overlay");
+				overlay.setAttribute("class", "overlay");
+				//overlay.onclick = restore;
+				document.body.appendChild(overlay);
+			
+			
+				var form_div = document.createElement("div");
+				form_div.setAttribute("id", "overlayimg");
+				form_div.setAttribute("class", "overlayimg");
+				form_div.style.top = screen.height/2 - 275;
+				form_div.style.left = screen.width/2 - 175;
+				has_layout = true;
+				
+				
+				//create layout
+				var header = document.createElement("h2");
+				header.innerHTML = "Login";
+				header.setAttribute("class", "header");
+				form_div.appendChild(header);
+				
+				var username_label = document.createElement("div");
+				username_label.innerHTML = "Username ";
+				form_div.appendChild(username_label);
+				
+				
+				//username input
+				var username_input = document.createElement("input");
+				username_input.type = "text";
+				username_input.id = "username";
+				form_div.appendChild(username_input);
+				
+				var br = document.createElement("br");
+				form_div.appendChild(br);
+				
+				
+				var password_label = document.createElement("div");
+				password_label.innerHTML = "Password ";
+				form_div.appendChild(password_label);
+				
+				//password input
+				var password_input = document.createElement("input");
+				password_input.type = "password";
+				password_input.id = "password";
+				form_div.appendChild(password_input);
+				
+				form_div.appendChild(br);
+				
+				//button
+				var submit_button = document.createElement("button");
+				submit_button.innerHTML = "Login";
+				submit_button.setAttribute("onclick", "login()");
+				form_div.appendChild(submit_button);
+				document.body.appendChild(form_div);
+			}
+			
+		}
+		
+		function login()
+		{
+			
 		}
 		
 		function restore() {
@@ -142,12 +238,12 @@
 		var cursorY;
 		var computers = new Array();
 		var has_layout = false;
-		
+		var logged_in = false;
 		var canvas = document.getElementById('canvas');
 		var context = canvas.getContext('2d');
 		
-		rec_draw_computer(context, 80, 150, 50, 10);
-		rec_draw_computer(context, 80, 200, 50, 10);
+		//rec_draw_computer(context, 80, 150, 50, 10);
+		//rec_draw_computer(context, 80, 200, 50, 10);
 		
 		
 		
@@ -164,6 +260,11 @@
 		}*/
 		
 		//document.getElementById('data').innerHTML = computers.length + "   " + computers[1].X;
+		
+		if(logged_in == false)
+		{
+			show_login_window();
+		}
 	</script>
 
 </body>
