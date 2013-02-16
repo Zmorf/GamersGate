@@ -53,15 +53,29 @@
 		if($row['password'] == $md5password)
 		{
 			$data = array((object)array('message' => 'login success', 'error' => '0'));
-			$json = json_encode($json);
+			$json = json_encode($data);
 			echo $json;
 		}
 		else
 		{
 			$data = array((object)array('message' => 'wrong password', 'error' => '1'));
-			$json = json_encode($json);
+			$json = json_encode($data);
 			echo $json;
 		}
+	}
+	else if($cmd == 'new_employee')
+	{
+		$username = $_GET['username'];
+		$password = $_GET['password'];
+		$md5password = md5($password);
+		
+		$query = "INSERT INTO employee(username, password) VALUES('$username', '$md5password')";
+		mysql_query($query);
+		
+		$data = array('message' => 'employee added', 'error' => 0);
+		echo json_encode($data);
+		//echo $json;
+		
 	}
 	
 	mysql_close($connection);
