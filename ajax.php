@@ -19,7 +19,7 @@
 		$counter = 0;
 		while($row = mysql_fetch_assoc($result))
 		{
-			$arr = array('id' => $row['id']);
+			$arr = array('id' => $row['id'], 'x' => $row['x'], 'y' => $row['y'], 'name' => $row['name']);
 			$data[$counter] = $arr;
 			$counter = $counter + 1;
 		}

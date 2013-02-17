@@ -80,7 +80,14 @@
 
         function handleListComputers(json)
         {
-            
+            document.getElementById('data').innerHTML += "<br/>" + json[0].x;
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+
+            for(var i = 0; i < json.length; i++)
+            {
+                draw_computer(context, json[i].x, json[i].y);    
+            }
         }
 
         function handleEmployeeLogin(json)
@@ -98,6 +105,8 @@
 		function expandPhoto() {
 			if(!has_layout)
 			{
+				has_layout = true;
+
 				var overlay = document.createElement("div");
 				overlay.setAttribute("id","overlay");
 				overlay.setAttribute("class", "overlay");
@@ -110,13 +119,11 @@
 				form_div.setAttribute("class", "overlayimg");
 				form_div.style.top = screen.height/2 - 275;
 				form_div.style.left = screen.width/2 - 175;
-				has_layout = true;
-				
 				//create layout
 				var header = document.createElement("h2");
 				header.innerHTML = "Header";
-				header.setAttribyte("class", "header");
-				form_div.appendChild(header);
+				header.setAttribute("class", "header");
+				form_div.appendChild(header);	
 				
 				
 				document.body.appendChild(form_div);
@@ -127,6 +134,8 @@
 		{
 			if(!has_layout)
 			{
+				has_layout = true;
+
 				var overlay = document.createElement("div");
 				overlay.setAttribute("id","overlay");
 				overlay.setAttribute("class", "overlay");
@@ -139,10 +148,10 @@
 				form_div.setAttribute("class", "overlayimg");
 				form_div.style.top = screen.height/2 - 275;
 				form_div.style.left = screen.width/2 - 175;
-				has_layout = true;
 				
 				
-				//create layout
+                //create layout
+
 				var header = document.createElement("h2");
 				header.innerHTML = "Login";
 				header.setAttribute("class", "header");
@@ -153,7 +162,8 @@
 				form_div.appendChild(username_label);
 				
 				
-				//username input
+                //username input
+
 				var username_input = document.createElement("input");
 				username_input.type = "text";
 				username_input.id = "username";
@@ -180,7 +190,9 @@
 				submit_button.innerHTML = "Login";
 				submit_button.setAttribute("onclick", "login()");
 				form_div.appendChild(submit_button);
-				document.body.appendChild(form_div);
+                document.body.appendChild(form_div);
+
+                has_layout = true;
 			}
 			
 		}
@@ -195,15 +207,15 @@
 		}
 		
 		function restore() {
+			has_layout = false;
 			document.body.removeChild(document.getElementById("overlay"));
 			document.body.removeChild(document.getElementById("overlayimg"));
-			has_layout = false;
 		}
 		
 		function Computer(x, y)
 		{
-			this.X = x;
-			this.Y = y;
+			this.X = parseInt(x);
+			this.Y = parseInt(y);
 			
 			this.id = id_counter;
 			id_counter = id_counter + 1;
@@ -214,7 +226,7 @@
 		{
 			context.beginPath();
 			context.rect(x, y, 50, 50);
-			context.fillStyle = 'yellow';
+			context.fillStyle = 'green';
 			context.fill();
 			context.strokeStyle = 'black';
 			context.stroke();
@@ -241,13 +253,15 @@
 			cursorY = e.pageY;
 			if(button == 1)
 			{
-				//alert("Cursor at X:" + cursorX + " Y:" + cursorY);
-				for(var i = 0; i < computers.length; i++)
+                //alert("Cursor at X:" + cursorX + " Y:" + cursorY);
+                //document.getElementById('data').innerHTML += "<br/>Clicked at X: " + cursorX + " Y: " + cursorY;
+				for(var i = 0; i < id_counter; i++)
 				{
 					var com = computers[i];
 					if((com.X < cursorX) && ((com.X+50) > cursorX) && (com.Y < cursorY) && ((com.Y+50) > cursorY))
 					{
-						//alert("Clicked computer " + com.id + " @ X:" + com.X + " Y:" + com.Y);
+                        //alert("Clicked computer " + com.id + " @ X:" + com.X + " Y:" + com.Y);
+                        //document.getElementById('data').innerHTML += "<br/>Computer clicked";
 						expandPhoto();
 					}
 					//document.getElementById('data').innerHTML = document.getElementById('data').innerHTML + "<br/>" + "Com at X:" + com.X + " Y:" + com.Y;
@@ -262,7 +276,8 @@
 
 	<canvas width="800px" height="500px" id="canvas"></canvas>
 	
-	
+
+    <button onclick="performAjax('list_computers', '');">List computers</button>
 	
 	<div id="data"> </div>
 	
