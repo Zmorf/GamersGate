@@ -5,7 +5,7 @@
 	$connection = mysql_connect('localhost', 'test', 'test');
 	if(!$connection)
 	{
-		$data = array((object)array('error' => 'connection failed'));
+		$data = array(('message' => 'connection failed');
 		$json = json_encode($data);
 		echo $json;
 		exit(0);
@@ -21,7 +21,7 @@
 		$counter = 0;
 		while($row = mysql_fetch_assoc($result))
 		{
-			$arr = array((object)array('id' => $row['id']));
+			$arr = array('id' => $row['id']);
 			$data[$counter] = $arr;
 			$counter = $counter + 1;
 		}
@@ -34,7 +34,7 @@
 		$query = "INSERT INTO computer(name) VALUES('$name')";
 		mysql_query($query);
 		
-		$data = array((object)array('status' => 'ok'));
+		$data = array('status' => 'ok');
 		$json = json_encode($data);
 		echo $json;
 	}
@@ -52,13 +52,13 @@
 		
 		if($row['password'] == $md5password)
 		{
-			$data = array((object)array('message' => 'login success', 'error' => '0'));
+			$data = array('message' => 'login success', 'error' => '0');
 			$json = json_encode($data);
 			echo $json;
 		}
 		else
 		{
-			$data = array((object)array('message' => 'wrong password', 'error' => '1'));
+			$data = array('message' => 'wrong password', 'error' => '1');
 			$json = json_encode($data);
 			echo $json;
 		}

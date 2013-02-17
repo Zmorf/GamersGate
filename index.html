@@ -71,7 +71,8 @@
 		
 		function handleAjaxByCmd(cmd, jsonResponse)
 		{
-		
+			var json = eval('('+ jsonResponse +')');
+			document.getElementById('data').innerHTML += "<br/>Message: " + json.message;
 		}
 		
 		function expandPhoto() {
