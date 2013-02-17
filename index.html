@@ -60,7 +60,6 @@
 					if (xmlhttp.readyState==4 && xmlhttp.status==200)
 					{
 						//document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
-						document.getElementById('data').innerHTML += "<br/>Got response: " + xmlhttp.resonseText;
 						handleAjaxByCmd(cmd, xmlhttp.responseText);
 					}
 				}
@@ -72,8 +71,29 @@
 		function handleAjaxByCmd(cmd, jsonResponse)
 		{
 			var json = eval('('+ jsonResponse +')');
-			document.getElementById('data').innerHTML += "<br/>Message: " + json.message;
-		}
+
+            if(cmd == 'employee_login')
+                handleEmployeeLogin(json);
+            else if(cmd == 'list_computers')
+                handleListComputers(json);
+        }
+
+        function handleListComputers(json)
+        {
+            
+        }
+
+        function handleEmployeeLogin(json)
+        {
+
+            if(json.error == '0')
+            {
+                restore();
+                document.getElementById('data').innerHTML += "<br/>Loading computers";
+                performAjax('list_computers', '');
+            }
+        }
+
 		
 		function expandPhoto() {
 			if(!has_layout)

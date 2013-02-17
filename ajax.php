@@ -1,16 +1,14 @@
 <?php
-
-
 	$cmd = $_GET['cmd'];
-	$connection = mysql_connect('localhost', 'test', 'test');
+    $connection = mysql_connect('localhost', 'gamersgate', 'gamersgate');
 	if(!$connection)
 	{
-		$data = array(('message' => 'connection failed');
+		$data = array('message' => 'connection failed');
 		$json = json_encode($data);
 		echo $json;
 		exit(0);
 	}
-	mysql_select_db('test');
+    mysql_select_db('gamersgate');
 	
 	if($cmd == 'list_computers')
 	{
@@ -66,10 +64,11 @@
 	else if($cmd == 'new_employee')
 	{
 		$username = $_GET['username'];
-		$password = $_GET['password'];
+        $password = $_GET['password'];
+        $name = $_GET['name'];
 		$md5password = md5($password);
 		
-		$query = "INSERT INTO employee(username, password) VALUES('$username', '$md5password')";
+		$query = "INSERT INTO employee(username, password, name) VALUES('$username', '$md5password', '$name')";
 		mysql_query($query);
 		
 		$data = array('message' => 'employee added', 'error' => 0);
@@ -77,7 +76,10 @@
 		//echo $json;
 		
 	}
-	
+    else
+    {
+        echo "No command";
+    }    
 	mysql_close($connection);
 
 
