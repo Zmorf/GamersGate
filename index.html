@@ -76,11 +76,20 @@
                 handleEmployeeLogin(json);
             else if(cmd == 'list_computers')
                 handleListComputers(json);
+            else if(cmd == 'computer_info')
+                expandPhoto(json);
+            else if(cmd == 'loadSchedule')
+                handleLoadSchedule(jsonResponse);
         }
+
+        function handleLoadSchedule(html)
+        {
+            window.open("ajax.php?cmd=loadSchedule&id=" + html)
+        }
+
 
         function handleListComputers(json)
         {
-            document.getElementById('data').innerHTML += "<br/>" + json[0].x;
             var canvas = document.getElementById('canvas');
             var context = canvas.getContext('2d');
 
@@ -102,7 +111,7 @@
         }
 
 		
-		function expandPhoto() {
+		function expandPhoto(json) {
 			if(!has_layout)
 			{
 				has_layout = true;
@@ -121,14 +130,29 @@
 				form_div.style.left = screen.width/2 - 175;
 				//create layout
 				var header = document.createElement("h2");
-				header.innerHTML = "Header";
+				header.innerHTML = "Computer " + json.id;
 				header.setAttribute("class", "header");
 				form_div.appendChild(header);	
-				
+            
+                var current_user = document.createElement("p");
+                current_user.innerHTML = "Current user: " + json.currentUser;
+                form_div.appendChild(current_user);
+
+                var schedule = document.createElement("input");
+                schedule.type = "button"
+                schedule.value = "Schedule";
+                //schedule.onclick = getSchedule(json.id);
+                schedule.onclick = function() {
+                    handleLoadSchedule(json.id);
+                }
+                form_div.appendChild(schedule);
+
+
 				
 				document.body.appendChild(form_div);
 			}
-		}
+        }
+
 		
 		function show_login_window()
 		{
@@ -166,7 +190,8 @@
 
 				var username_input = document.createElement("input");
 				username_input.type = "text";
-				username_input.id = "username";
+                username_input.id = "username";
+                username_input.value = "zmorf";
 				form_div.appendChild(username_input);
 				
 				var br = document.createElement("br");
@@ -180,7 +205,8 @@
 				//password input
 				var password_input = document.createElement("input");
 				password_input.type = "password";
-				password_input.id = "password";
+                password_input.id = "password";
+                password_input.value = "ainat7964";
 				form_div.appendChild(password_input);
 				
 				form_div.appendChild(br);
@@ -262,7 +288,8 @@
 					{
                         //alert("Clicked computer " + com.id + " @ X:" + com.X + " Y:" + com.Y);
                         //document.getElementById('data').innerHTML += "<br/>Computer clicked";
-						expandPhoto();
+                        //expandPhoto(com.id);
+                        performAjax('computer_info', 'id=' + com.id);
 					}
 					//document.getElementById('data').innerHTML = document.getElementById('data').innerHTML + "<br/>" + "Com at X:" + com.X + " Y:" + com.Y;
 				}

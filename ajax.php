@@ -75,7 +75,55 @@
 		echo json_encode($data);
 		//echo $json;
 		
-	}
+    }
+    else if($cmd == 'computer_info')
+    {
+        $id = $_GET['id'];
+        $data = array('id' => $id, 'currentUser' => 'Zmorf');
+        $json = json_encode($data);
+        echo $json;
+    }
+    else if($cmd == 'loadSchedule')
+    {
+        $id = $_GET['id'];
+        #generate table for schedule
+        #$query = "SELECT * FROM computerlog INNER JOIN booking ON computerlog.computer == booking.computer";
+        #$query = "SELECT * FROM computerlog WHERE computer='$id'";
+        $query = "SELECT * FROM computerlog INNER JOIN user ON computerlog.user = user.id";
+        $result = mysql_query($query);
+
+        echo "<h2>Old entrys</h2>";
+        echo "<table border=\"1\">";
+        while($row = mysql_fetch_assoc($result))
+        {
+            #print old 
+            echo "<tr>";
+            echo "<td>";
+            echo $row['starttime'];
+            echo "</td>";
+            
+            echo "<td>";
+            echo $row['endtime'];
+            echo "</td>"
+
+            echo "</tr>";
+        }
+        echo "</table>";
+
+
+        $query = "SELECT * FROM booking WHERE computer='$id'";
+        $result = mysql_query($query);
+
+
+        echo "<h2>New entrys</h2>";
+        echo "<table border=\"1\">";
+        while($row = mysql_fetch_assoc($result))
+        {
+            #print new booking
+
+        }
+        echo "</table">;
+    }
     else
     {
         echo "No command";
