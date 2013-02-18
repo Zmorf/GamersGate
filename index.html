@@ -107,6 +107,7 @@
 
         function handleListComputers(json)
         {
+            computers = new Array();
             var canvas = document.getElementById('canvas');
             var context = canvas.getContext('2d');
 
@@ -466,6 +467,17 @@
                 document.body.appendChild(form_div);
             }
         }
+
+
+
+        function handleNewComputer()
+        {
+            var x = document.getElementById('x').value;
+            var y = document.getElementById('y').value;
+            var name = document.getElementById('computer_name').value;
+            performAjax('add_computer', 'name=' + name + '&x=' + x + '&y=' + y);
+            setTimeout(performAjax('list_computers', ''), 2000);
+        }
 	</script>
 	</head>
 
@@ -483,6 +495,13 @@
 
     <button onclick="handleBuyTime();">Buy time</button> 
 
+    <br/>
+    X <input type="text" id="x"/><br/>
+    Y <input type="text" id="y"/><br/>
+    Name <input type="text" id="computer_name"/><br/>
+    <button onclick="handleNewComputer();">Add new computer</button>
+    <br/>
+    <button onclick="window.open('ajax.php?cmd=show_employee_schedule');">Show employee schedule</button>
     <br/>
     <br/>
     <button onclick="handleUnload(employee);">Logout</button>

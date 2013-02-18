@@ -28,8 +28,10 @@
 	}
 	else if($cmd == 'add_computer')
 	{
-		$name = $_GET['name'];
-		$query = "INSERT INTO computer(name) VALUES('$name')";
+        $name = $_GET['name'];
+        $x = $_GET['x'];
+        $y = $_GET['y'];
+		$query = "INSERT INTO computer(name, x, y) VALUES('$name', '$x', '$y')";
 		mysql_query($query);
 		
 		$data = array('status' => 'ok');
@@ -285,6 +287,24 @@
         $json = json_encode($data);
         echo $json;
 
+    }
+    else if($cmd == 'show_employee_schedule')
+    {
+        $query = "SELECT * FROM schedule INNER JOIN employee ON schedule.employee = employee.id";
+
+        $result = mysql_query($query);
+        echo "<table border=\"1\"><tr><td>Employee</td><td>Starttime</td><td>Endtime</td></tr>";
+        while($row = mysql_fetch_assoc($result))
+        {
+            echo "<tr>";
+            echo "<td>";
+            echo $row['name'];
+            echo "</td><td>";
+            echo $row['starttime'];
+            echo "</td><td>";
+            echo $row['endtime'];
+            echo "</td></tr>";
+        }
     }
     else
     {
