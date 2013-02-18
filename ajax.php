@@ -190,6 +190,40 @@
         $json = json_encode($data);
         echo $json;
     }
+    else if($cmd == 'listUsers')
+    {
+        $query = "SELECT * FROM user";
+        $result = mysql_query($query);
+
+        $data = array();
+        $counter = 0;
+        while($row = mysql_fetch_assoc($result))
+        {
+            $data[$counter] = array('username' => $row['username']); 
+            $counter = $counter + 1;
+        }
+        $json = json_encode($data);
+        echo $json;
+    }
+    else if($cmd == 'add_booking')
+    {
+        $username = $_GET['username'];
+        $id = $_GET['computer'];
+        $hours = $_GET['time'];
+
+        $query = "SELECT id FROM user WHERE username='$username'";
+        $result = mysql_query($query);
+        $row = mysql_fetch_assoc($result);
+        $user_id = $row['id'];
+
+        $query = "INSERT INTO booking(computer, user, time) VALUES('$id', '$user_id', '$hours')";
+
+        mysql_query($query);
+
+        $data = array('error' => '0', 'message' => 'Booking successful');
+        $json = json_encode($data);
+        echo $json;
+    }
     else
     {
         echo "No command";

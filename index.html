@@ -63,7 +63,6 @@
 						handleAjaxByCmd(cmd, xmlhttp.responseText);
 					}
 				}
-				document.getElementById('data').innerHTML += "<br/>Loading: " + "ajax.php?cmd=" + cmd + "&" + value;
 			xmlhttp.open("GET","ajax.php?cmd=" + cmd + "&" + value,true);
 			xmlhttp.send();
 		}
@@ -80,6 +79,8 @@
                 expandPhoto(json);
             else if(cmd == 'loadSchedule')
                 handleLoadSchedule(jsonResponse);
+            else if(cmd == 'add_booking')
+                restore();
         }
 
         function handleLoadSchedule(html)
@@ -105,7 +106,6 @@
             if(json.error == '0')
             {
                 restore();
-                document.getElementById('data').innerHTML += "<br/>Loading computers";
                 performAjax('list_computers', '');
             }
         }
@@ -141,16 +141,103 @@
                 var schedule = document.createElement("input");
                 schedule.type = "button"
                 schedule.value = "Schedule";
-                //schedule.onclick = getSchedule(json.id);
                 schedule.onclick = function() {
                     handleLoadSchedule(json.id);
                 }
                 form_div.appendChild(schedule);
 
 
+                var booking = document.createElement("input");
+                booking.type = "button";
+                booking.value = "Booking";
+                booking.onclick = function() {
+                    handleBooking(json.id);
+                }
+                form_div.appendChild(booking);
 				
 				document.body.appendChild(form_div);
 			}
+        }
+
+        function handleBooking(id)
+        {
+            document.body.removeChild(document.getElementById("overlayimg"));
+
+            var form_div = document.createElement("div");
+        	form_div.setAttribute("id", "overlayimg");
+			form_div.setAttribute("class", "overlayimg");
+			form_div.style.top = screen.height/2 - 275;
+            form_div.style.left = screen.width/2 - 175;
+
+            var br = document.createElement("br");
+
+            var header = document.createElement("h2");
+            header.innerHTML = "Booking for computer " + id;
+            header.setAttribute("class", "header");
+            form_div.appendChild(header);
+            form_div.appendChild(br);
+            //users
+
+            var list_label = document.createElement("p");
+            list_label.innerHTML = "User";
+            form_div.appendChild(list_label);
+
+            var user_list = document.createElement("select");
+            user_list.id = "user_list";
+            form_div.appendChild(user_list);
+	        form_div.appendChild(br);
+
+            //load all users, sync ajax request
+    	    var xmlhttp;
+    	    if (window.XMLHttpRequest)
+    	    {// code for IE7+, Firefox, Chrome, Opera, Safari
+    		xmlhttp=new XMLHttpRequest();
+    	    }
+    	    else
+    	    {// code for IE6, IE5
+    		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    	    }
+    	    xmlhttp.open("GET","ajax.php?cmd=listUsers",false);
+            xmlhttp.send();
+
+    	    var json = eval('('+ xmlhttp.responseText +')');
+
+            for(var i = 0; i < json.length; i++)
+            {
+                var tmp = document.createElement("option");
+                tmp.value = json[i].username;
+                tmp.innerHTML = json[i].username;
+                user_list.appendChild(tmp);
+            }
+
+            var label = document.createElement("p");
+            label.innerHTML = "Hours";
+            form_div.appendChild(label);
+
+            var time = document.createElement("input");
+            time.type = "text";
+            time.id = "time";
+            form_div.appendChild(time);
+	    form_div.appendChild(br);
+            var submit = document.createElement("input");
+            submit.type = "button";
+            submit.value = "Submit";
+            submit.onclick = function() {
+                handleBookingSubmit(id);
+            }
+            form_div.appendChild(submit);
+
+            document.body.appendChild(form_div);
+        }
+
+        function handleBookingSubmit(id)
+        {
+            var e = document.getElementById('user_list');
+            var user = e.options[e.selectedIndex].text;
+            var time = document.getElementById('time');
+            var hours = time.value;
+
+            performAjax('add_booking', 'username=' + user + '&time=' + hours + '&computer=' + id);
         }
 
 		
