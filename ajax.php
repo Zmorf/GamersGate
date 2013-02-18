@@ -210,13 +210,14 @@
         $username = $_GET['username'];
         $id = $_GET['computer'];
         $hours = $_GET['time'];
+        $starttime = $_GET['starttime'];
 
         $query = "SELECT id FROM user WHERE username='$username'";
         $result = mysql_query($query);
         $row = mysql_fetch_assoc($result);
         $user_id = $row['id'];
 
-        $query = "INSERT INTO booking(computer, user, time) VALUES('$id', '$user_id', '$hours')";
+        $query = "INSERT INTO booking(computer, user, time, starttime) VALUES('$id', '$user_id', '$hours', '$starttime')";
 
         mysql_query($query);
 
