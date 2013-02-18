@@ -79,7 +79,22 @@
     else if($cmd == 'computer_info')
     {
         $id = $_GET['id'];
-        $data = array('id' => $id, 'currentUser' => 'Zmorf');
+
+        #aquire current user
+        $query = "SELECT * FROM (SELECT * FROM computerlog WHERE computer='$id' ORDER BY id DESC LIMIT 0,1) AS computerlog INNER JOIN user ON user.id = computerlog.user";
+
+        $result = mysql_query($query);
+        $row = mysql_fetch_assoc($result);
+
+        if($row['endtime'] == NULL)
+            $currentUser = NULL;
+        else
+        {
+            $currentUser = $row['username'];
+        }
+
+
+        $data = array('id' => $id, 'currentUser' => $currentUser);
         $json = json_encode($data);
         echo $json;
     }
