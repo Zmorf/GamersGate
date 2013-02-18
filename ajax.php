@@ -253,6 +253,39 @@
         $json = json_encode($data);
         echo $json;
     }
+    else if($cmd == 'buy_time')
+    {
+        $employee = $_GET['employee'];
+        $username = $_GET['username'];
+        $amount = $_GET['time'];
+
+        #get employee id
+        $query = "SELECT id FROM employee WHERE username='$employee'";
+        $result = mysql_query($query);
+        $row = mysql_fetch_assoc($result);
+        $employee_id = $row['id'];
+
+        #get old playtime 
+        $query = "SELECT playTime, id FROM user WHERE username='$username'";
+        $result = mysql_query($query);
+        $row = mysql_fetch_assoc($result);
+        $playtime = $row['playTime'];
+        $user_id = $row['id'];
+
+        $newPlayTime = $playtime + $amount;
+        #update playTime
+        $query = "UPDATE user SET playTime='$newPlayTime' WHERE username='$username'";
+        mysql_query($query);
+
+        #log the employee that did the update
+        $query = "UPDATE buylog SET employee='$employee_id' WHERE user='$user_id' AND employee IS NULL";    
+        mysql_query($query);
+
+        $data = array('error' => '0');
+        $json = json_encode($data);
+        echo $json;
+
+    }
     else
     {
         echo "No command";

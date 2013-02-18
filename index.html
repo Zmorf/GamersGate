@@ -83,7 +83,20 @@
                 restore();
             else if(cmd == 'employee_logout')
                 location.reload(true);
-                //setTimeout(location.reload(true), 2000);
+            else if(cmd == 'listUsers')
+                handleListUsers(json);
+        }
+    
+        function handleListUsers(json)
+        {
+            var select = document.getElementById('users');
+            for(var i = 0; i < json.length; i++)
+            {
+                var tmp = document.createElement("option");
+                tmp.value = json[i].username;
+                tmp.innerHTML = json[i].username;
+                select.appendChild(tmp);
+            }
         }
 
         function handleLoadSchedule(html)
@@ -112,6 +125,7 @@
                 restore();
                 performAjax('employee_loggedin', 'employee=' + employee);
                 performAjax('list_computers', '');
+                performAjax('listUsers', '');
             }
         }
 
@@ -384,8 +398,6 @@
 			cursorY = e.pageY;
 			if(button == 1)
 			{
-                //alert("Cursor at X:" + cursorX + " Y:" + cursorY);
-                //document.getElementById('data').innerHTML += "<br/>Clicked at X: " + cursorX + " Y: " + cursorY;
 				for(var i = 0; i < id_counter; i++)
 				{
 					var com = computers[i];
@@ -402,7 +414,58 @@
         {
             performAjax('employee_logout', 'employee=' + employee);
         }
-	
+
+
+        function handleBuyTime()
+        {
+			if(!has_layout)
+			{
+				var user = document.getElementById('users').options[document.getElementById('users').selectedIndex].text;
+
+				has_layout = true;
+
+				var overlay = document.createElement("div");
+				overlay.setAttribute("id","overlay");
+				overlay.setAttribute("class", "overlay");
+				overlay.onclick = restore;
+				document.body.appendChild(overlay);
+			
+			
+				var form_div = document.createElement("div");
+				form_div.setAttribute("id", "overlayimg");
+				form_div.setAttribute("class", "overlayimg");
+				form_div.style.top = screen.height/2 - 275;
+				form_div.style.left = screen.width/2 - 175;
+				//create layout
+				var header = document.createElement("h2");
+				header.innerHTML = "Buy time user: " + user;
+				header.setAttribute("class", "header");
+				form_div.appendChild(header);	
+
+                var amount_label = document.createElement("p");
+                amount_label.innerHTML = "Amount of hours";
+                form_div.appendChild(amount_label);
+
+                var amount = document.createElement("input");
+                amount.type = "text";
+                amount.id = "amount";
+                form_div.appendChild(amount);
+
+                var br = document.createElement("br");
+                form_div.appendChild(br);
+
+                var submit = document.createElement("input");
+                submit.type = "button";
+                submit.value = "Submit";
+                submit.onclick = function() {
+                    performAjax('buy_time', 'employee=' + employee + '&username=' + user + '&time=' + amount.value);
+                }
+
+                form_div.appendChild(submit);
+
+                document.body.appendChild(form_div);
+            }
+        }
 	</script>
 	</head>
 
@@ -418,9 +481,11 @@
 
     <br/>
 
+    <button onclick="handleBuyTime();">Buy time</button> 
+
+    <br/>
+    <br/>
     <button onclick="handleUnload(employee);">Logout</button>
-    <button onclick="">Buy time</button> 
-	
 	<div id="data"> </div>
 	
 	<script type="text/javascript">
