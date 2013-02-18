@@ -81,6 +81,9 @@
                 handleLoadSchedule(jsonResponse);
             else if(cmd == 'add_booking')
                 restore();
+            else if(cmd == 'employee_logout')
+                location.reload(true);
+                //setTimeout(location.reload(true), 2000);
         }
 
         function handleLoadSchedule(html)
@@ -105,7 +108,9 @@
 
             if(json.error == '0')
             {
+
                 restore();
+                performAjax('employee_loggedin', 'employee=' + employee);
                 performAjax('list_computers', '');
             }
         }
@@ -327,8 +332,8 @@
 		{
 			var username = document.getElementById('username').value;
 			var password = document.getElementById('password').value;
-			
-			document.getElementById('data').innerHTML += "<br/>Loading ajax";
+		    employee = username;
+
 			performAjax("employee_login", "username="+username+"&password="+password);
 		}
 		
@@ -386,25 +391,35 @@
 					var com = computers[i];
 					if((com.X < cursorX) && ((com.X+50) > cursorX) && (com.Y < cursorY) && ((com.Y+50) > cursorY))
 					{
-                        //alert("Clicked computer " + com.id + " @ X:" + com.X + " Y:" + com.Y);
-                        //document.getElementById('data').innerHTML += "<br/>Computer clicked";
-                        //expandPhoto(com.id);
                         performAjax('computer_info', 'id=' + com.id);
 					}
-					//document.getElementById('data').innerHTML = document.getElementById('data').innerHTML + "<br/>" + "Com at X:" + com.X + " Y:" + com.Y;
 				}
 			}
-		}
+        }
+
+
+        function handleUnload(employee)
+        {
+            performAjax('employee_logout', 'employee=' + employee);
+        }
 	
 	</script>
 	</head>
 
-<body>
+    <body>
 
 	<canvas width="800px" height="500px" id="canvas"></canvas>
 	
+    <br/>
 
-    <button onclick="performAjax('list_computers', '');">List computers</button>
+    <select id="users">
+
+    </select>
+
+    <br/>
+
+    <button onclick="handleUnload(employee);">Logout</button>
+    <button onclick="">Buy time</button> 
 	
 	<div id="data"> </div>
 	
@@ -417,7 +432,8 @@
 		var logged_in = false;
 		var canvas = document.getElementById('canvas');
 		var context = canvas.getContext('2d');
-		
+        var employee;
+
 		//rec_draw_computer(context, 80, 150, 50, 10);
 		//rec_draw_computer(context, 80, 200, 50, 10);
 		
@@ -440,7 +456,7 @@
 		if(logged_in == false)
 		{
 			show_login_window();
-		}
+        }
 	</script>
 
 </body>

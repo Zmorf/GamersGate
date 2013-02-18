@@ -225,6 +225,34 @@
         $json = json_encode($data);
         echo $json;
     }
+    else if($cmd == 'employee_loggedin')
+    {
+        $employee = $_GET['employee'];
+        $query = "SELECT id FROM employee WHERE username='$employee'";
+        $result = mysql_query($query);
+        $row = mysql_fetch_assoc($result);
+        $id = $row['id'];
+        $query = "INSERT INTO schedule(employee) VALUES('$id')";
+        mysql_query($query);
+
+    }
+    else if($cmd == 'employee_logout')
+    {
+        $employee = $_GET['employee'];
+        $query = "SELECT id from employee WHERE username='$employee'";
+        $result = mysql_query($query);
+        $row = mysql_fetch_assoc($result);
+        $id = $row['id'];
+
+        $dateTime = new DateTime("now", new DateTimeZone('Europe/Stockholm'));
+        $timestamp = $dateTime->format('Y-m-d H:i:s');
+
+        $query = "UPDATE schedule SET endtime = '$timestamp' WHERE endtime IS NULL AND employee='$id'";
+        mysql_query($query);
+        $data = array('error' => '0');
+        $json = json_encode($data);
+        echo $json;
+    }
     else
     {
         echo "No command";
