@@ -104,7 +104,7 @@
             
             echo "<td>";
             echo $row['endtime'];
-            echo "</td>"
+            echo "</td>";
 
             echo "</tr>";
         }
@@ -122,7 +122,35 @@
             #print new booking
 
         }
-        echo "</table">;
+        echo "</table>";
+    }
+    else if($cmd == 'new_user')
+    {
+        $username = $_GET['username'];
+        $password = $_GET['password'];
+        $md5password = md5($password);
+        #all users start with 1 hour playtime
+
+    	#check username
+	    $query = "SELECT * FROM user WHERE username='$username'";
+    	$result = mysql_query($query);
+    	$row = mysql_fetch_assoc($result);
+    	if(isset($row['password']))
+    	{
+		
+            $data = array('error' => '1', 'message' => 'Username exists');
+           	$json = json_encode($data);
+            echo $json;
+            mysql_close($connection);
+            exit(0);
+	    }
+
+        $query = "INSERT INTO user(username, password, playTime) VALUES('$username', '$md5password', 1)";
+        mysql_query($query);
+
+        $data = array('error' => '0', 'message' => 'User added');
+        $json = json_encode($data);
+        echo $json;
     }
     else
     {
