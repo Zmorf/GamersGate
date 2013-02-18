@@ -109,6 +109,7 @@
 
         echo "<h2>Old entrys</h2>";
         echo "<table border=\"1\">";
+        echo "<tr><td>Starttime</td><td>Endtime</td><td>Username</td></tr>";
         while($row = mysql_fetch_assoc($result))
         {
             #print old 
@@ -121,20 +122,42 @@
             echo $row['endtime'];
             echo "</td>";
 
+            echo "<td>";
+            echo $row['username'];
+            echo "</td>";
+
+
             echo "</tr>";
         }
         echo "</table>";
 
 
-        $query = "SELECT * FROM booking WHERE computer='$id'";
+        $query = "SELECT * FROM (SELECT * FROM booking WHERE computer='$id') AS booking INNER JOIN user ON user.id = booking.user";
         $result = mysql_query($query);
 
 
         echo "<h2>New entrys</h2>";
+  
         echo "<table border=\"1\">";
+        echo "<tr><td>Starttime</td><td>Hours</td><td>Username</td></tr>";
         while($row = mysql_fetch_assoc($result))
         {
-            #print new booking
+            #print new  
+            echo "<tr>";
+            echo "<td>";
+            echo $row['starttime'];
+            echo "</td>";
+            
+            echo "<td>";
+            echo $row['time'];
+            echo "</td>";
+
+            echo "<td>";
+            echo $row['username'];
+            echo "</td>";
+
+
+            echo "</tr>";
 
         }
         echo "</table>";
